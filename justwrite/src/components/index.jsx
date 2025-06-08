@@ -1,3 +1,5 @@
+export { SkeletonCard } from "./SkeletonCard";
+
 export { Header } from "./Header";
 export { Footer } from "./Footer";
 export { PostCard } from "./PostCard";

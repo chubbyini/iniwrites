@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom"
+
 export const Footer = () => {
   return (
-    <footer>2025 <Link to="/">INIWRITES </Link> ALL writes reserved</footer>
+    <footer>
+      <p>© 2030 <Link to="/">IniWrites</Link>. All Rights Reserved.</p>
+    </footer>
   )
 }

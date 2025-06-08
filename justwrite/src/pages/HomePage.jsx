@@ -1,16 +1,35 @@
-import { PostCard } from "../components";
+import { useEffect, useState,useRef } from "react";
+import { getDocs, collection } from "firebase/firestore";
+import { PostCard, SkeletonCard } from "../components";
+import { db } from "../firebase/config";
+import { useTitle } from "../Hooks/useTitle";
 
 export const HomePage = () => {
-  const posts = [
-    {id: 1, title: "Lorem ipsum dolor sit amet", description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat quidem magnam vitae, deserunt facilis, commodi accusamus doloribus fugiat, soluta debitis illo nostrum quo tempora consequatur quas illum nobis laboriosam recusandae distinctio nihil ratione. Minima reprehenderit maiores fugiat cupiditate dolorem, consequuntur asperiores nostrum voluptatem laboriosam temporibus obcaecati, nesciunt beatae possimus tenetur.", author: "Shubham"}, 
-    {id: 2, title: "Lorem ipsum dolor", description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat quidem magnam vitae, deserunt facilis, commodi accusamus doloribus fugiat, soluta debitis illo nostrum quo tempora consequatur quas illum nobis laboriosam recusandae distinctio nihil ratione. Minima reprehenderit maiores fugiat cupiditate dolorem, consequuntur asperiores nostrum voluptatem.", author: "Shubham"}
-  ]
+  const [nodes, setNodes] = useState(new Array(2).fill(false));
+  const [toggle,setToggle]=useState(false)
+  useTitle("nodes")
+  const nodesRef =useRef(collection(db, "nodes"));
+
+  useEffect(() => {
+    async function getnodes() {
+      const data = await getDocs(nodesRef.current);
+      const nodesArray = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setNodes(nodesArray);
+    }
+    getnodes();
+  }, [nodesRef,toggle]);
 
   return (
     <section>
-      { posts.map((post) => (
-        <PostCard key={post.id} post={post} />
-      )) }      
+      {nodes.map((node,index) => (
+          node? 
+                   ( <PostCard key={node.id} post={node} toggle={toggle}  setToggle={setToggle} />
+          ):(
+            <SkeletonCard key={index}/>)
+      ))}
     </section>
-  )
-}
+  );
+};
